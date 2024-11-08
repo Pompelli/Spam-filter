@@ -1,0 +1,29 @@
+Steps to Complete the Spam Filter
+Download Dataset:
+
+Obtain spam and ham (non-spam) email examples from Apache SpamAssassin's public datasets. These datasets can be found at SpamAssassin's public corpus.
+Data Preprocessing:
+
+Unzip the dataset and familiarize yourself with its structure.
+Split the data into training and testing sets.
+Feature Extraction:
+
+Write a data preparation pipeline to convert each email into a feature vector.
+Transform each email into a vector that records the presence (or absence) of each word.
+Pipeline Options:
+
+Include hyperparameters to adjust for different preprocessing options like:
+Stripping headers
+Converting text to lowercase
+Removing punctuation
+Replacing URLs and numbers
+Stemming (using libraries like NLTK or SpaCy)
+Classifier Selection:
+
+Test various classifiers (e.g., Naive Bayes, SVM, Random Forest) to find a model with high recall and precision.
+Use cross-validation to tune hyperparameters and improve model performance.
+Documentation and Report:
+
+Document your code with comments, following PEP 8 standards.
+Write a report in either an iPython notebook or LaTeX explaining your approach, decisions, and results.
+Would you like help with code examples for any of these specific steps?
