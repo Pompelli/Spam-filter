@@ -65,7 +65,7 @@ clf.fit(X_train, y_train)
 
 # Use probabilities to apply a custom threshold for spam detection
 y_prob = clf.predict_proba(X_test)[:, 1]  # Probability of being spam
-spam_threshold = 0.000000000001 # Adjusted threshold to reduce false positives
+spam_threshold = 0.7 # Adjusted threshold to reduce false positives
 
 # Predict using the custom threshold
 y_pred = (y_prob >= spam_threshold).astype(int)
