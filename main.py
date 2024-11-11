@@ -23,23 +23,7 @@ def load_emails_from_folder(folder_path, label):
                 labels.append(label)
     return emails, labels
 
-# Paths to each folder
-easy_ham_path = 'Data/easy_ham'
-hard_ham_path = 'Data/hard_ham'
-spam_path = 'Data/spam'
 
-# Load emails from each folder
-easy_ham_emails, easy_ham_labels = load_emails_from_folder(easy_ham_path, 0)
-hard_ham_emails, hard_ham_labels = load_emails_from_folder(hard_ham_path, 0)
-spam_emails, spam_labels = load_emails_from_folder(spam_path, 1)
-
-# Combine all emails and labels
-all_emails = easy_ham_emails + hard_ham_emails + spam_emails
-all_labels = easy_ham_labels + hard_ham_labels + spam_labels
-
-###########################################################################################################################################
-
-# Function to preprocess email content
 def preprocess_email(content):
     content = content.lower()
     content = re.sub(r'\d+', 'NUMBER', content)
@@ -47,10 +31,20 @@ def preprocess_email(content):
     content = re.sub(r'\W+', ' ', content)
     return content
 
-# Preprocess all emails
+
+
+# Load emails from each folder
+easy_ham_emails, easy_ham_labels = load_emails_from_folder('Data/easy_ham', 0)
+hard_ham_emails, hard_ham_labels = load_emails_from_folder('Data/hard_ham', 0)
+spam_emails, spam_labels = load_emails_from_folder('Data/spam', 1)
+
+# Combine all emails and labels
+all_emails = easy_ham_emails + hard_ham_emails + spam_emails
+all_labels = easy_ham_labels + hard_ham_labels + spam_labels
+
+
 processed_emails = [preprocess_email(email) for email in all_emails]
 
-###########################################################################################################################################
 
 # Vectorize using CountVectorizer with n-grams
 vectorizer = CountVectorizer(ngram_range=(1, 2), stop_words='english')  # Unigrams und Bigrams
@@ -71,6 +65,7 @@ X = vectorizer.fit_transform(processed_emails)
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, all_labels, test_size=0.2, random_state=42)
 
+
 # Train a Naive Bayes classifier with adjusted alpha
 clf = MultinomialNB(alpha=0.3)  
 '''
@@ -86,7 +81,7 @@ clf.fit(X_train, y_train)
 
 # Use probabilities to apply a custom threshold for spam detection
 y_prob = clf.predict_proba(X_test)[:, 1]  # Probability of being spam
-spam_threshold = 0.15  # Adjustierter Schwellenwert für weniger False Positives
+spam_threshold = 0.1 
 
 # Predict using the custom threshold
 y_pred = (y_prob >= spam_threshold).astype(int)
@@ -96,7 +91,12 @@ accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy:.2f}")
 print(classification_report(y_test, y_pred))
 
+
+
 ###########################################################################################################################################
+#Plotting the results
+###########################################################################################################################################
+
 
 # Plot histogram of predicted probabilities for spam
 plt.figure(figsize=(10, 6))
