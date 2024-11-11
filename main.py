@@ -52,27 +52,44 @@ processed_emails = [preprocess_email(email) for email in all_emails]
 
 ###########################################################################################################################################
 
-# Vectorize
-vectorizer = CountVectorizer()
+# Vectorize using CountVectorizer with n-grams
+vectorizer = CountVectorizer(ngram_range=(1, 2), stop_words='english')  # Unigrams und Bigrams
+'''
+ngram_range=(1, 2): 
+
+allows vectorizer to capture not only individual words (unigrams) but also pairs of consecutive words (bigrams)
+
+
+stop_words='english':
+
+removes common English words (like “the,” “is,” “and”) which are unimportant.
+helps the model focus on more meaningful words
+'''
+
 X = vectorizer.fit_transform(processed_emails)
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, all_labels, test_size=0.2, random_state=42)
 
-# Train a Naive Bayes classifier
-clf = MultinomialNB()
+# Train a Naive Bayes classifier with adjusted alpha
+clf = MultinomialNB(alpha=0.3)  
+'''
+alpha=0.3:
+
+alpha is a smoothing parameter    default = 1
+Smoothing prevents model from overemphasizing rare words.
+
+A smaller alpha makes the model more sensitive to rare, but spam-indicative terms.
+If the value is too high, the model may overlook important information.
+'''
 clf.fit(X_train, y_train)
 
 # Use probabilities to apply a custom threshold for spam detection
 y_prob = clf.predict_proba(X_test)[:, 1]  # Probability of being spam
-spam_threshold = 0.1 # Adjusted threshold to reduce false positives
+spam_threshold = 0.15  # Adjustierter Schwellenwert für weniger False Positives
 
 # Predict using the custom threshold
 y_pred = (y_prob >= spam_threshold).astype(int)
-
-
-
-
 
 # Evaluate the classifier with custom threshold
 accuracy = accuracy_score(y_test, y_pred)
@@ -91,10 +108,6 @@ plt.ylabel("Frequency")
 plt.legend()
 plt.show()
 
-
-
-
-
 # Compute the confusion matrix with the adjusted threshold
 conf_matrix = confusion_matrix(y_test, y_pred)
 
@@ -105,7 +118,3 @@ plt.title("Confusion Matrix with Adjusted Threshold")
 plt.xlabel("Predicted Label")
 plt.ylabel("True Label")
 plt.show()
-
-
-
-
