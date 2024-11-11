@@ -63,13 +63,13 @@ helps the model focus on more meaningful words
 X = vectorizer.fit_transform(processed_emails)
 
 # Split data
-X_train, X_test, y_train, y_test = train_test_split(X, all_labels, test_size=0.2, random_state=41)
+X_train, X_test, y_train, y_test = train_test_split(X, all_labels, test_size=0.2, random_state=42)
 
 
 # Train a Naive Bayes classifier with adjusted alpha
 clf = MultinomialNB(alpha=0.001)  
 '''
-alpha=0.3:
+alpha=0.001:
 
 alpha is a smoothing parameter    default = 1
 Smoothing prevents model from overemphasizing rare words.
