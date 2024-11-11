@@ -67,7 +67,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, all_labels, test_size=0.2
 
 
 # Train a Naive Bayes classifier with adjusted alpha
-clf = MultinomialNB(alpha=0.3)  
+clf = MultinomialNB(alpha=0.1)  
 '''
 alpha=0.3:
 
@@ -117,7 +117,7 @@ conf_matrix = confusion_matrix(y_test, y_pred)
 # Plot the confusion matrix as a heatmap
 plt.figure(figsize=(8, 6))
 sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=["Ham", "Spam"], yticklabels=["Ham", "Spam"])
-plt.title("Confusion Matrix with Adjusted Threshold")
+plt.title("Confusion Matrix")
 plt.xlabel("Predicted Label")
 plt.ylabel("True Label")
 plt.show()
