@@ -65,10 +65,14 @@ clf.fit(X_train, y_train)
 
 # Use probabilities to apply a custom threshold for spam detection
 y_prob = clf.predict_proba(X_test)[:, 1]  # Probability of being spam
-spam_threshold = 0.01 # Adjusted threshold to reduce false positives
+spam_threshold = 0.1 # Adjusted threshold to reduce false positives
 
 # Predict using the custom threshold
 y_pred = (y_prob >= spam_threshold).astype(int)
+
+
+
+
 
 # Evaluate the classifier with custom threshold
 accuracy = accuracy_score(y_test, y_pred)
@@ -76,6 +80,20 @@ print(f"Accuracy: {accuracy:.2f}")
 print(classification_report(y_test, y_pred))
 
 ###########################################################################################################################################
+
+# Plot histogram of predicted probabilities for spam
+plt.figure(figsize=(10, 6))
+plt.hist(y_prob, bins=50, color='skyblue', edgecolor='k', alpha=0.7)
+plt.axvline(spam_threshold, color='red', linestyle='--', label=f'Spam Threshold ({spam_threshold})')
+plt.title("Histogram of Predicted Spam Probabilities")
+plt.xlabel("Predicted Probability of Spam")
+plt.ylabel("Frequency")
+plt.legend()
+plt.show()
+
+
+
+
 
 # Compute the confusion matrix with the adjusted threshold
 conf_matrix = confusion_matrix(y_test, y_pred)
@@ -87,3 +105,7 @@ plt.title("Confusion Matrix with Adjusted Threshold")
 plt.xlabel("Predicted Label")
 plt.ylabel("True Label")
 plt.show()
+
+
+
+
