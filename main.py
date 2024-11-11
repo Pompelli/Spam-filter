@@ -67,7 +67,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, all_labels, test_size=0.2
 
 
 # Train a Naive Bayes classifier with adjusted alpha
-clf = MultinomialNB(alpha=0.1)  
+clf = MultinomialNB(alpha=0.01)  
 '''
 alpha=0.3:
 
