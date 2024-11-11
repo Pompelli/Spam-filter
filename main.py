@@ -86,7 +86,10 @@ spam_threshold = 0.1
 # Predict using the custom threshold
 y_pred = (y_prob >= spam_threshold).astype(int)
 
-# Evaluate the classifier with custom threshold
+
+###########################################################################################################################################
+# calculate the accuracy and print the classification report
+###########################################################################################################################################
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy:.2f}")
 print(classification_report(y_test, y_pred))
