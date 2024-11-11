@@ -7,29 +7,74 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Function to load emails from a specified folder and label them
 def load_emails_from_folder(folder_path, label):
-    emails = []
-    labels = []
+    '''
+    This function loads email data from a specified folder and assigns a label to each email.
     
+    Parameters:
+    - folder_path (str): The path to the folder containing the email files.
+    - label (int): An integer label to assign to each email in the folder, typically used to
+                   indicate categories such as 'ham' (0) or 'spam' (1).
+                   
+    Process:
+    - Iterates through each file in the given folder path.
+    - For each file, verifies that it is a file (not a directory).
+    - Reads the content of each file, appends it to the `emails` list, and assigns the specified 
+      label to the `labels` list.
+    
+    Returns:
+    - tuple: A tuple containing:
+        - emails (list of str): List of email contents read from files in the specified folder.
+        - labels (list of int): List of integer labels corresponding to each email.
+    '''
+    
+    emails = []  # Initialize an empty list to store email contents
+    labels = []  # Initialize an empty list to store labels (e.g., 0 for ham, 1 for spam)
+    
+    # Iterate through all files in the specified folder
     for filename in os.listdir(folder_path):
-        file_path = os.path.join(folder_path, filename)
+        file_path = os.path.join(folder_path, filename)  # Create the full path to the file
         
-        # Load each email
+        # Check if the current item is a file (not a subdirectory)
         if os.path.isfile(file_path):
+            # Open the file and read its content
             with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
-                content = file.read()
+                content = file.read()  # Read the content of the email
+                
+                # Append the content to the emails list and the label to the labels list
                 emails.append(content)
                 labels.append(label)
+    
+    # Return the list of emails and their corresponding labels
     return emails, labels
 
 
+
 def preprocess_email(content):
-    content = content.lower()
-    content = re.sub(r'\d+', 'NUMBER', content)
-    content = re.sub(r'http\S+', 'URL', content)
-    content = re.sub(r'\W+', ' ', content)
-    return content
+    '''
+    This function preprocesses the text content of an email by applying several transformations
+    to standardize and simplify the text, making it more suitable for analysis or machine learning models.
+    
+    Steps:
+    - Converts all characters to lowercase.
+    - Replaces all numbers with the word 'NUMBER' to generalize numerical information.
+    - Replaces URLs with the word 'URL' to standardize web addresses.
+    - Removes any non-word characters (e.g., punctuation), replacing them with a space.
+    
+    Parameters:
+    - content (str): The original text content of the email.
+
+    Returns:
+    - content (str): The preprocessed text content of the email.
+    '''
+    
+    content = content.lower()  # Convert all text to lowercase to ensure uniformity
+    content = re.sub(r'\d+', 'NUMBER', content)  # Replace all numbers with the word 'NUMBER'
+    content = re.sub(r'http\S+', 'URL', content)  # Replace URLs with the word 'URL'
+    content = re.sub(r'\W+', ' ', content)  # Replace any non-word characters with a space
+    
+    return content  # Return the preprocessed email content
+
 
 
 
