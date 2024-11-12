@@ -92,7 +92,7 @@ processed_emails = [preprocess_email(email) for email in all_emails]
 
 
 # Vectorize using CountVectorizer with n-grams
-vectorizer = CountVectorizer(ngram_range=(1, 2), stop_words='english')  # Unigrams und Bigrams
+vectorizer = CountVectorizer(ngram_range=(1, 2), stop_words='english',max_df=0.7,min_df=1)  # Unigrams und Bigrams
 '''
 ngram_range=(1, 2): 
 
