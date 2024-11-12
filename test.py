@@ -50,12 +50,12 @@ pipeline = Pipeline([
 
 # Define parameter grid for GridSearchCV
 param_grid = {
-    'vectorizer__ngram_range': [(1, 3)],             # Teste Unigramme, Bigramme und Trigramme
-    'vectorizer__stop_words': ['english'],                     # Mit und ohne englische Stoppwörter
-    'vectorizer__max_df': [0.5],                           # Filter für häufige Begriffe
-    'vectorizer__min_df': [1],                                 # Filter für seltene Begriffe
-    'vectorizer__binary': [True],                             # Nur Vorkommen oder Häufigkeit berücksichtigen
-    'classifier__alpha': [0.001]                       # Verschiedene Alpha-Werte für Naive Bayes
+    'vectorizer__ngram_range': [(1, 1), (1, 2), (1, 3), (2, 2)],      # Unigram, bigram, and trigram combinations
+    'vectorizer__stop_words': [None, 'english'],              # With and without English stop words
+    'vectorizer__max_df': [0.5, 0.7, 1.0],                   # Filter for high-frequency terms
+    'vectorizer__min_df': [1, 2, 5],                         # Filter for low-frequency terms
+    'vectorizer__binary': [True, False],                     # Binary and non-binary features
+    'classifier__alpha': [0.001, 0.01, 0.1, 1.0]            # Different alpha values for Naive Bayes
 }
 
 # Set up GridSearchCV
