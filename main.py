@@ -139,7 +139,7 @@ y_pred = (y_prob >= spam_threshold).astype(int)
 ###########################################################################################################################################
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy:.2f}")
-print(classification_report(y_test, y_pred))
+print(classification_report(y_test, y_pred,digits=3))
 
 
 
