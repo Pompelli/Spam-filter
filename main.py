@@ -93,9 +93,11 @@ processed_emails = [preprocess_email(email) for email in all_emails]
 
 # Vectorize using CountVectorizer with n-grams
 vectorizer = CountVectorizer(ngram_range=(1, 2),stop_words='english',max_df=0.5,min_df=1,binary=True)
-
-
 '''
+The CountVectorizer creates a dictionary (vocabulary) of all unique words (tokens) in the text.
+Counting Frequencies: It counts how often each word from the vocabulary appears in each document.
+
+
 ngram_range=(1, 2): 
 
 allows vectorizer to capture not only individual words (unigrams) but also pairs of consecutive words (bigrams)
@@ -108,6 +110,23 @@ helps the model focus on more meaningful words
 '''
 
 X = vectorizer.fit_transform(processed_emails)
+'''
+This line performs two actions:
+
+1. The vectorizer identifys unique words/tokens in the text and assigs each a numerical index.
+
+2. Transforming each email into a numerical feature vector,
+   where the features represent the presence or frequency of words (or other tokens)
+
+The result X is a matrix:
+
+Rows correspond to individual emails.
+Columns correspond to the features (words/tokens).
+Values indicate the word frequency
+
+Summary:
+This process converts raw text into a format suitable for machine learning.
+'''
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, all_labels, test_size=0.2, random_state=42)
