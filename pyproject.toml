@@ -1,0 +1,24 @@
+[project]
+name = "Spam-filter"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Noel Hack", email = "Noel.hack12@gmail.com"},
+]
+dependencies = [
+    "scikit-learn>=1.5.2",
+    "matplotlib>=3.9.3",
+    "seaborn==0.12.2",
+    "numpy>=2.1.3",
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
