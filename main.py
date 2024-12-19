@@ -13,8 +13,8 @@ def load_emails_from_folder(folder_path, label):
     
     Parameters:
     - folder_path (str): The path to the folder containing the email files.
-    - label (int): An integer label to assign to each email in the folder, typically used to
-                   indicate categories such as 'ham' (0) or 'spam' (1).
+    - label (int): An integer label to assign to each email in the folder, to
+                   indicate categories 'ham' (0) or 'spam' (1).
                    
     Process:
     - Iterates through each file in the given folder path.
@@ -100,7 +100,7 @@ Counting Frequencies: It counts how often each word from the vocabulary appears 
 
 ngram_range=(1, 2): 
 
-allows vectorizer to capture not only individual words (unigrams) but also pairs of consecutive words (bigrams)
+captures not only individual words (unigrams) but also pairs of consecutive words (bigrams)
 
 
 stop_words='english':
@@ -148,6 +148,15 @@ clf.fit(X_train, y_train)
 # Use probabilities to apply a custom threshold for spam detection
 y_prob = clf.predict_proba(X_test)[:, 1]  # Probability of being spam
 spam_threshold = 0.9
+'''
+The spam_threshold sets the minimum probability required to classify a message as spam.
+
+With spam_threshold = 0.9, only messages with a spam probability of 90% or higher are classified as spam (1).
+Reduces false positives but may increase false negatives.
+
+But it has minimal impact on the model's performance, as MOST messages are either clearly spam or clearly not spam.
+
+'''
 
 # Predict using the custom threshold
 y_pred = (y_prob >= spam_threshold).astype(int)
