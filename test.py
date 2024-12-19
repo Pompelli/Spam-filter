@@ -6,6 +6,9 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
+
+# Load and preprocess emails
 
 def load_emails_from_folder(folder_path, label):
     emails = []
@@ -37,9 +40,6 @@ all_labels = easy_ham_labels + hard_ham_labels + spam_labels
 # Preprocess emails
 processed_emails = [preprocess_email(email) for email in all_emails]
 
-# Split data
-X_train_text, X_test_text, y_train, y_test = train_test_split(processed_emails, all_labels, test_size=0.2, random_state=42)
-
 # Set up a pipeline with CountVectorizer and Naive Bayes
 from sklearn.pipeline import Pipeline
 
@@ -51,31 +51,67 @@ pipeline = Pipeline([
 # Define parameter grid for GridSearchCV
 param_grid = {
     'vectorizer__ngram_range': [(1, 1), (1, 2), (1, 3), (2, 2)],      # Unigram, bigram, and trigram combinations
-    'vectorizer__stop_words': [None, 'english'],              # With and without English stop words
-    'vectorizer__max_df': [0.5, 0.7, 1.0],                   # Filter for high-frequency terms
-    'vectorizer__min_df': [1, 2, 5],                         # Filter for low-frequency terms
-    'vectorizer__binary': [True, False],                     # Binary and non-binary features
-    'classifier__alpha': [0.001, 0.01, 0.1, 1.0]            # Different alpha values for Naive Bayes
+    'vectorizer__stop_words': [None, 'english'],                      # With and without English stop words
+    'vectorizer__max_df': [0.5, 0.7, 1.0],                            # Filter for high-frequency terms
+    'vectorizer__min_df': [1, 2, 5],                                  # Filter for low-frequency terms
+    'vectorizer__binary': [True, False],                              # Binary and non-binary features
+    'classifier__alpha': [0.001, 0.01, 0.1, 1.0]                      # Different alpha values for Naive Bayes
 }
 
-# Set up GridSearchCV
-grid_search = GridSearchCV(pipeline, param_grid, scoring='accuracy', cv=3, verbose=1, n_jobs=-1)
-grid_search.fit(X_train_text, y_train)
+# Track accuracy for each parameter combination
+param_accuracies = []
 
-# Best parameters and model
-print("Beste Parameter:", grid_search.best_params_)
-print("Beste Genauigkeit:", grid_search.best_score_)
+# Run for multiple random states
+random_states = [42, 69, 187, 420, 1]  # Different random states
 
-# Vectorize with the best parameters
-best_pipeline = grid_search.best_estimator_
-y_pred = best_pipeline.predict(X_test_text)
+for random_state in random_states:
+    print(f"\nRunning for random state: {random_state}\n")
+    
+    # Split data
+    X_train_text, X_test_text, y_train, y_test = train_test_split(
+        processed_emails, all_labels, test_size=0.2, random_state=random_state
+    )
+    
+    # Set up GridSearchCV
+    grid_search = GridSearchCV(pipeline, param_grid, scoring='accuracy', cv=3, verbose=1, n_jobs=-1)
+    grid_search.fit(X_train_text, y_train)
+    
+    # Best parameters and model
+    print("Best Parameters:", grid_search.best_params_)
+    print("Best Accuracy:", grid_search.best_score_)
+    
+    # Vectorize with the best parameters
+    best_pipeline = grid_search.best_estimator_
+    y_pred = best_pipeline.predict(X_test_text)
+    
+    # Calculate and print metrics
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Accuracy for random state {random_state}: {accuracy:.2f}")
+    param_accuracies.append({
+        'random_state': random_state,
+        'best_params': grid_search.best_params_,
+        'test_accuracy': accuracy
+    })
 
-# Calculate and print metrics
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy: {accuracy:.2f}")
-print(classification_report(y_test, y_pred))
+# Calculate average accuracy for each parameter combination
+param_combo_accuracies = {}
 
-# Plot histogram of predicted probabilities for spam
+for result in param_accuracies:
+    param_combo = tuple(result['best_params'].items())
+    if param_combo not in param_combo_accuracies:
+        param_combo_accuracies[param_combo] = []
+    param_combo_accuracies[param_combo].append(result['test_accuracy'])
+
+average_accuracies = {
+    params: np.mean(accuracies) for params, accuracies in param_combo_accuracies.items()
+}
+
+# Print the average accuracies for each parameter combination
+print("\nAverage Accuracies for Each Parameter Combination:\n")
+for params, avg_acc in sorted(average_accuracies.items(), key=lambda x: x[1], reverse=True):
+    print(f"Parameters: {dict(params)} -> Average Accuracy: {avg_acc:.4f}")
+
+# Plot histogram of predicted probabilities for spam from the last run
 y_prob = best_pipeline.predict_proba(X_test_text)[:, 1]
 spam_threshold = 0.1
 plt.figure(figsize=(10, 6))
@@ -87,7 +123,7 @@ plt.ylabel("Frequency")
 plt.legend()
 plt.show()
 
-# Confusion matrix
+# Confusion matrix for the final run
 conf_matrix = confusion_matrix(y_test, y_pred)
 plt.figure(figsize=(8, 6))
 sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=["Ham", "Spam"], yticklabels=["Ham", "Spam"])
