@@ -169,7 +169,6 @@ print(f"Accuracy: {accuracy:.2f}")
 print(classification_report(y_test, y_pred,digits=3))
 
 
-
 ###########################################################################################################################################
 #Plotting the results
 ###########################################################################################################################################
@@ -192,15 +191,16 @@ print("Confusion Matrix:\n", conf_matrix)
 
 # Plot the confusion matrix as a heatmap
 disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=["Ham", "Spam"])
-disp.plot(cmap="Blues")  # Setze Farbkarte
-plt.title("Confusion Matrix")  # Füge einen Titel hinzu
+disp.plot(cmap="Blues")
+plt.title("Confusion Matrix") 
 plt.show()
 
 
-#calc 
+
+# Calculate precision-recall curve
 precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
 
-# Plot
+# Plot Precision-Recall curve
 plt.figure(figsize=(8, 6))
 plt.plot(recall, precision, color='green', label='Precision-Recall Curve')
 plt.title('Precision-Recall Curve')
@@ -208,6 +208,7 @@ plt.xlabel('Recall')
 plt.ylabel('Precision')
 plt.legend()
 plt.show()
+
 
 
 
