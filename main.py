@@ -3,9 +3,8 @@ import re
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 def load_emails_from_folder(folder_path, label):
     '''
@@ -188,11 +187,11 @@ plt.show()
 
 # Compute the confusion matrix with the adjusted threshold
 conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:\n", conf_matrix)
+
 
 # Plot the confusion matrix as a heatmap
-plt.figure(figsize=(8, 6))
-sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=["Ham", "Spam"], yticklabels=["Ham", "Spam"])
-plt.title("Confusion Matrix")
-plt.xlabel("Predicted Label")
-plt.ylabel("True Label")
+disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=["Ham", "Spam"])
+disp.plot(cmap="Blues")  # Setze Farbkarte
+plt.title("Confusion Matrix")  # Füge einen Titel hinzu
 plt.show()
