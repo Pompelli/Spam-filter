@@ -3,7 +3,7 @@ import re
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay, precision_recall_curve
 import matplotlib.pyplot as plt
 
 def load_emails_from_folder(folder_path, label):
@@ -195,3 +195,19 @@ disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=["Ham
 disp.plot(cmap="Blues")  # Setze Farbkarte
 plt.title("Confusion Matrix")  # Füge einen Titel hinzu
 plt.show()
+
+
+#calc 
+precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
+
+# Plot
+plt.figure(figsize=(8, 6))
+plt.plot(recall, precision, color='green', label='Precision-Recall Curve')
+plt.title('Precision-Recall Curve')
+plt.xlabel('Recall')
+plt.ylabel('Precision')
+plt.legend()
+plt.show()
+
+
+
