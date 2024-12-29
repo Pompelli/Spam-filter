@@ -3,7 +3,7 @@ import re
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -50,12 +50,12 @@ pipeline = Pipeline([
 
 # Define parameter grid for GridSearchCV
 param_grid = {
-    'vectorizer__ngram_range': [(1, 1), (1, 2), (1, 3), (2, 2)],      # Unigram, bigram, and trigram combinations
-    'vectorizer__stop_words': [None, 'english'],                      # With and without English stop words
-    'vectorizer__max_df': [0.5, 0.7, 1.0],                            # Filter for high-frequency terms
-    'vectorizer__min_df': [1, 2, 5],                                  # Filter for low-frequency terms
-    'vectorizer__binary': [True, False],                              # Binary and non-binary features
-    'classifier__alpha': [0.001, 0.01, 0.1, 1.0]                      # Different alpha values for Naive Bayes
+    'vectorizer__ngram_range': [(1, 1), (1, 2), (1, 3), (2, 2),(2, 3)],      # Unigram, bigram, and trigram combinations
+    'vectorizer__stop_words': [None, 'english'],                             # With and without English stop words
+    'vectorizer__max_df': [0.3, 0.5, 0.7],                                   # Filter for high-frequency terms
+    'vectorizer__min_df': [1, 2, 5],                                         # Filter for low-frequency terms
+    'vectorizer__binary': [True, False],                                     # Binary and non-binary features
+    'classifier__alpha': [0.001, 0.01, 0.1, 1.0]                             # Different alpha values for Naive Bayes
 }
 
 # Track accuracy for each parameter combination

@@ -1,3 +1,23 @@
+'''
+I decided for a Bayesscher Spamfilter
+https://de.wikipedia.org/wiki/Bayesscher_Spamfilter
+
+The file "main.py" contains my code with detailed descriptions.
+
+The file "test.py" was used solely to determine the best parameters for my classifier through grid search. 
+The optimal parameters were then applied in the main file. 
+Since "test.py" is not part of the submission and not required, it has not been commented.
+I included it only to demonstrate how the chosen hyperparameters were determined.
+
+
+
+to Run:
+
+pdm install
+pdm run main.py
+
+'''
+
 import os
 import re
 from sklearn.feature_extraction.text import CountVectorizer
@@ -5,6 +25,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay, precision_recall_curve
 import matplotlib.pyplot as plt
+
 
 def load_emails_from_folder(folder_path, label):
     '''
@@ -98,14 +119,21 @@ Counting Frequencies: It counts how often each word from the vocabulary appears 
 
 
 ngram_range=(1, 2): 
-
 captures not only individual words (unigrams) but also pairs of consecutive words (bigrams)
 
 
 stop_words='english':
-
 removes common English words (like “the,” “is,” “and”) which are unimportant.
 helps the model focus on more meaningful words
+
+max_df=0.5:
+ignores all words that appear in more than 50% of the documents.
+
+min_df=1:
+only includes words that appear in at least one document.
+
+binary=True:
+Instead of counting the frequency of words, it simply indicates whether a word is present in the document or not.
 '''
 
 X = vectorizer.fit_transform(processed_emails)
@@ -184,23 +212,24 @@ plt.ylabel("Frequency")
 plt.legend()
 plt.show()
 
-# Compute the confusion matrix with the adjusted threshold
+
+###########################################################################################################################################
+# Compute and plot the confusion matrix 
+###########################################################################################################################################
 conf_matrix = confusion_matrix(y_test, y_pred)
 print("Confusion Matrix:\n", conf_matrix)
 
-
-# Plot the confusion matrix as a heatmap
 disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=["Ham", "Spam"])
 disp.plot(cmap="Blues")
 plt.title("Confusion Matrix") 
 plt.show()
 
 
-
-# Calculate precision-recall curve
+###########################################################################################################################################
+# Calculate and plot precision-recall curve
+###########################################################################################################################################
 precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
 
-# Plot Precision-Recall curve
 plt.figure(figsize=(8, 6))
 plt.plot(recall, precision, color='green', label='Precision-Recall Curve')
 plt.title('Precision-Recall Curve')
